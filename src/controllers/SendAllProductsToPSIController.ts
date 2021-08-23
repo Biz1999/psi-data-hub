@@ -36,7 +36,7 @@ class SendAllProductsToPSIController {
     let depositosToPSI: Deposito[] = [];
     products.map((product) => depositosToPSI.push(...product["depositos"]));
 
-    console.log(JSON.stringify(depositosToPSI[11], null, 2));
+    // console.log(JSON.stringify(depositosToPSI[11], null, 2));
     depositosToPSI.forEach(async (deposito, index) => {
       setTimeout(async function () {
         await api
