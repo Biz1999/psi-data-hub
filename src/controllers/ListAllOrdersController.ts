@@ -6,13 +6,13 @@ class ListAllOrdersController {
     try {
       const apikey = process.env.API_KEY;
       const { data } = await api.get(
-        `/pedidos/json&apikey=${apikey}&historico=true`
+        `pedidos/json%26apikey=${apikey}&filters=dataEmissao%5B31/05/2021%20TO%2023/08/2021%5D%26historico=true`
       );
       const { pedidos } = data.retorno as PedidosBling;
 
       return pedidos;
     } catch (err) {
-      return err.response.data;
+      console.log(err.response.data);
     }
   }
 }

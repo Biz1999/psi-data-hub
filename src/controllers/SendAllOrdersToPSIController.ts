@@ -1,7 +1,9 @@
-import { Pedido, PedidosBling } from "../dtos/OrdersBling";
-import { Order, Product } from "../dtos/OrdersPSI";
+import { Pedido } from "../dtos/OrdersBling";
+import { Order } from "../dtos/OrdersPSI";
 import api from "../services/sendToPSI";
+import { format } from "date-fns";
 import { ListAllOrdersController } from "./ListAllOrdersController";
+import { paymentMethod } from "../utils/paymentMethod";
 
 class SendAllOrdersToPSIController {
   async handle() {
@@ -15,10 +17,13 @@ class SendAllOrdersToPSIController {
           total_value: Number(pedido.pedido.totalvenda),
           payment_method:
             pedido.pedido.parcelas !== undefined
-              ? pedido.pedido.parcelas[0].parcela?.forma_pagamento.descricao
+              ? paymentMethod(
+                  pedido.pedido.parcelas[0].parcela?.forma_pagamento.descricao
+                )
               : null,
           total_discount: parseFloat(pedido.pedido.desconto),
-          reference: "#123",
+          date: format(new Date(pedido.pedido.data), "yyyy-MM-dd 00:mm:ss"),
+          reference: pedido.pedido.numero,
           products: pedido.pedido.itens?.map((item, index) => {
             const product = {
               product_sku: item.item.codigo,

@@ -8,8 +8,10 @@ const sendAllProductsToPSIController = new SendAllProductsToPSIController();
 const sendAllOrdersToPSIController = new SendAllOrdersToPSIController();
 
 const bootstrap = async () => {
-  await sendAllOrdersToPSIController.handle();
-  // await sendAllProductsToPSIController.handle();
+  // await sendAllOrdersToPSIController.handle();
+  await sendAllProductsToPSIController
+    .handle()
+    .catch((err) => console.log(err));
   // console.log(response);
 };
 
