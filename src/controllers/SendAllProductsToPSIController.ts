@@ -6,6 +6,7 @@ import { ListAllProductsController } from "./ListAllProductsController";
 
 class SendAllProductsToPSIController {
   async handle() {
+    const fs = require("fs");
     const listAllProductsController = new ListAllProductsController();
     const response = await listAllProductsController.handle("S");
     const products = response.map((product: Produto) => {
@@ -20,15 +21,19 @@ class SendAllProductsToPSIController {
         in_stock: product.produto.estoqueAtual,
         category: product.produto.categoria.descricao,
         depositos: product.produto.depositos.map((deposito) => {
-          const newDeposito = {
-            quantity: Number(deposito.deposito.saldo),
-            type: "in",
-            product_sku: product.produto.codigo,
-            unitary_value: Number(product.produto.preco),
-            cost_value: Number(product.produto.precoCusto),
-            store_slug: deposito.deposito.id,
-          };
-          return newDeposito;
+          if (deposito.deposito.desconsiderar === "N") {
+            const newDeposito = {
+              quantity: Number(deposito.deposito.saldo),
+              type: "in",
+              product_sku: product.produto.codigo,
+              unitary_value: Number(product.produto.preco),
+              cost_value: Number(product.produto.precoCusto),
+              store_slug: deposito.deposito.id,
+            };
+            return Object.fromEntries(
+              Object.entries(newDeposito).filter(([_, v]) => v !== "")
+            );
+          }
         }),
       };
     }) as Product[];
@@ -36,8 +41,28 @@ class SendAllProductsToPSIController {
     let depositosToPSI: Deposito[] = [];
     products.map((product) => depositosToPSI.push(...product["depositos"]));
 
-    // console.log(JSON.stringify(depositosToPSI[11], null, 2));
-    depositosToPSI.forEach(async (deposito, index) => {
+    const depositosFiltered = depositosToPSI.filter((deposito) => {
+      return deposito != null;
+    });
+
+    fs.writeFileSync(
+      `src/utils/depositos.json`,
+      JSON.stringify(depositosFiltered, null, 2)
+    );
+
+    const productsToPSI = products.map((product) => {
+      delete product["depositos"];
+      return Object.fromEntries(
+        Object.entries(product).filter(([_, v]) => v !== "")
+      );
+    });
+
+    await api
+      .post("/products", { products: productsToPSI })
+      .then((response) => console.log(response.status))
+      .catch((error) => console.log(error.response.data));
+
+    depositosFiltered.forEach(async (deposito, index) => {
       setTimeout(async function () {
         await api
           .post("/stock_updates", deposito)
@@ -46,17 +71,10 @@ class SendAllProductsToPSIController {
       }, 3000 * (index + 1));
     });
 
-    // const productsToPSI = products.map((product) => {
-    //   delete product["depositos"];
-    //   return Object.fromEntries(
-    //     Object.entries(product).filter(([_, v]) => v !== "")
-    //   );
-    // });
-    // console.log(JSON.stringify(productsToPSI, null, 2));
-    // await api
-    //   .post("/products", { products: productsToPSI })
-    //   .then((response) => console.log(response.status))
-    //   .catch((error) => console.log(error.response.data));
+    fs.writeFileSync(
+      `src/utils/products.json`,
+      JSON.stringify({ products: productsToPSI }, null, 2)
+    );
   }
 }
 

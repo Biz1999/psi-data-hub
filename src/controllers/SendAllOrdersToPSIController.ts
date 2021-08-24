@@ -1,5 +1,6 @@
-import { Pedido } from "../dtos/OrdersBling";
+import { Pedido, PedidosBling } from "../dtos/OrdersBling";
 import { Order, Product } from "../dtos/OrdersPSI";
+import api from "../services/sendToPSI";
 import { ListAllOrdersController } from "./ListAllOrdersController";
 
 class SendAllOrdersToPSIController {
@@ -12,14 +13,14 @@ class SendAllOrdersToPSIController {
         return {
           id: index,
           total_value: Number(pedido.pedido.totalvenda),
-          total_discount: parseFloat(pedido.pedido.desconto),
           payment_method:
             pedido.pedido.parcelas !== undefined
               ? pedido.pedido.parcelas[0].parcela?.forma_pagamento.descricao
               : null,
+          total_discount: parseFloat(pedido.pedido.desconto),
+          reference: "#123",
           products: pedido.pedido.itens?.map((item, index) => {
             const product = {
-              product_id: index,
               product_sku: item.item.codigo,
               total_value:
                 Number(item.item.quantidade) * Number(item.item.valorunidade),
@@ -42,20 +43,31 @@ class SendAllOrdersToPSIController {
                     Number(item.item.precocusto),
               quantity: Number(item.item.quantidade),
             };
-            return product;
+            return Object.fromEntries(
+              Object.entries(product).filter(([_, v]) => v != null && v !== "")
+            );
           }),
         };
       }) as Order[];
 
-      const ordersWithoutNull = orders.map((order) => {
+      const ordersToPSI = orders.map((order) => {
         return Object.fromEntries(
           Object.entries(order).filter(([_, v]) => v != null)
         );
       });
 
+      // ordersToPSI.forEach(async (order, index) => {
+      //   setTimeout(async function () {
+      //     await api
+      //       .post("/orders", order)
+      //       .then((response) => console.log(response.status))
+      //       .catch((error) => console.log(error.response.data));
+      //   }, 3000 * (index + 1));
+      // });
+
       fs.writeFileSync(
-        `orders.json`,
-        JSON.stringify(ordersWithoutNull, null, 2)
+        `src/utils/orders.json`,
+        JSON.stringify(ordersToPSI, null, 2)
       );
 
       // console.log(orders);
