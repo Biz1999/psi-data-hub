@@ -3,13 +3,14 @@ if (process.env.NODE_ENV !== "production") {
 }
 import { ListAllProductsController } from "./src/controllers/ListAllProductsController";
 import { SendAllProductsToPSIController } from "./src/controllers/SendAllProductsToPSIController";
+import { SendAllOrdersToPSIController } from "./src/controllers/SendAllOrdersToPSIController";
 
-const listAllProductsController = new ListAllProductsController();
 const sendAllProductsToPSIController = new SendAllProductsToPSIController();
+const sendAllOrdersToPSIController = new SendAllOrdersToPSIController();
 
 const bootstrap = async () => {
-  const response = await sendAllProductsToPSIController.handle();
-  // console.log(response);
+  const response = await sendAllOrdersToPSIController.handle();
+  console.log(response);
 };
 
 bootstrap();
