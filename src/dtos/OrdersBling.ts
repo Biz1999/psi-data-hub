@@ -13,6 +13,8 @@ export interface Pedido {
     numero: string;
     totalvenda: string;
     desconto: string;
+    data: string;
+    loja: string;
     parcelas?: {
       parcela: {
         forma_pagamento: {
