@@ -20,7 +20,7 @@ class SendAllOrdersToPSIController {
           products: pedido.pedido.itens?.map((item, index) => {
             const product = {
               product_id: index,
-              product_sku: item.item.codigo,
+              product_sku: item.item.codigo === "" ? null : item.item.codigo,
               total_value:
                 Number(item.item.quantidade) * Number(item.item.valorunidade),
               total_discount:
@@ -48,9 +48,11 @@ class SendAllOrdersToPSIController {
       }) as Order[];
 
       const ordersWithoutNull = orders.map((order) => {
-        return Object.fromEntries(
-          Object.entries(order).filter(([_, v]) => v != null)
-        );
+        return order.products?.map((product) => {
+          return Object.fromEntries([
+            Object.entries(product).filter(([_, v]) => v != null),
+          ]);
+        });
       });
 
       fs.writeFileSync(
