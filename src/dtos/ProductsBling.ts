@@ -15,6 +15,7 @@ export interface Produto {
     gtin: string;
     preco: string;
     precoCusto: string;
+    dataAlteracao: Date;
     categoria: {
       id: string;
       descricao: string;

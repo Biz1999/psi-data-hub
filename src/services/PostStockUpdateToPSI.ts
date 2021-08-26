@@ -5,8 +5,8 @@ async function PostStockUpdateToPSI(deposito: Deposito, index: number) {
   setTimeout(async function () {
     await api
       .post("/stock_updates", deposito)
-      .then((response) => console.log(response.status))
-      .catch((error) => console.log(error.response.data));
+      .then((response) => console.log(index, response.status))
+      .catch((error) => console.log(index, error.response.data));
   }, 2000 * (index + 1));
 }
 

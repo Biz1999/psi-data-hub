@@ -5,9 +5,11 @@ class ListAllProductsController {
   async handle(estoque = "S", page: number) {
     try {
       const apikey = process.env.API_KEY;
-      const { data } = await api.get(
-        `/produtos/page=${page}/json&apikey=${apikey}&estoque=${estoque}`
-      );
+      const { data } = await api
+        .get(`/produtos/page=${page}/json&apikey=${apikey}&estoque=${estoque}`)
+        .catch((err) => {
+          throw new Error(err);
+        });
       const { produtos } = data.retorno as ProductsBling;
 
       return produtos;

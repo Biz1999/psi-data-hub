@@ -5,6 +5,7 @@ export interface Deposito {
   unitary_value: Number;
   cost_value: Number;
   store_slug: string;
+  date: Date;
 }
 
 export interface Product {
