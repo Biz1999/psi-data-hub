@@ -3,5 +3,5 @@ export const paymentMethod = (method: string) => {
   else if (method === "Cartao de Debito") return "DEBIT_CARD";
   else if (method === "Cartao de Credito") return "CREDIT_CARD";
 
-  return "CASH";
+  return "contas a pagar";
 };

@@ -18,5 +18,6 @@ export interface Order {
   returned?: number;
   store_slug?: string;
   payment_method?: string;
+  situacao: string;
   products: Product[];
 }

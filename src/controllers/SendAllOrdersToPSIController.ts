@@ -1,7 +1,7 @@
 import { Pedido } from "../dtos/OrdersBling";
 import { Order } from "../dtos/OrdersPSI";
 import api from "../services/sendToPSI";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ListAllOrdersController } from "./ListAllOrdersController";
 import { paymentMethod } from "../utils/paymentMethod";
 import { storeSlugConvert } from "../utils/storeSlugConvert";
@@ -24,7 +24,8 @@ class SendAllOrdersToPSIController {
             : "CASH",
         total_discount: parseFloat(pedido.pedido.desconto),
         store_slug: storeSlugConvert(pedido.pedido.loja),
-        date: format(new Date(pedido.pedido.data), "yyyy-MM-dd 00:mm:ss"),
+        situacao: pedido.pedido.situacao,
+        date: format(parseISO(pedido.pedido.data), "yyyy-MM-dd HH:mm:ss"),
         reference: pedido.pedido.numero,
         products: pedido.pedido.itens?.map((item, index) => {
           const product = {
@@ -60,16 +61,16 @@ class SendAllOrdersToPSIController {
     //   postOrdersToPSI(order, index);
     // });
 
-    const promises = ordersToPSI.map(async (order, index) => {
-      return await postOrdersToPSI(order, index);
-    });
+    // const promises = ordersToPSI.map(async (order, index) => {
+    //   return await postOrdersToPSI(order, index);
+    // });
 
-    await Promise.all(promises);
+    // await Promise.all(promises);
 
-    // fs.writeFileSync(
-    //   `src/utils/orders.json`,
-    //   JSON.stringify(ordersToPSI, null, 2)
-    // );
+    fs.writeFileSync(
+      `src/utils/orders.json`,
+      JSON.stringify(ordersToPSI, null, 2)
+    );
   }
 }
 
