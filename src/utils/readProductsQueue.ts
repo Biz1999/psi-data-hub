@@ -4,7 +4,7 @@ const sendAllProductsToPSIController = new SendAllProductsToPSIController();
 
 async function readProductQueue(page: number) {
   await sendAllProductsToPSIController.handle(page);
-  Promise.resolve(setTimeout(() => readProductQueue(page + 1), 1800500)).catch(
+  Promise.resolve(setTimeout(() => readProductQueue(page + 1), 1350500)).catch(
     (error) => Promise.reject(error)
   );
 }

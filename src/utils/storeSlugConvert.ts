@@ -7,7 +7,8 @@ export function storeSlugConvert(loja: string) {
   else if (loja === "203364715") return "7440850206";
   else if (loja === "203526903") return "10163974604";
   else if (loja === "203471687") return "11725458208";
-  else if (loja === "203398305" || loja === "203462662") return "3217867066";
+  else if (loja === "203398305") return "203398305";
+  else if (loja === "203462662") return "203462662";
 
   return null;
 }
