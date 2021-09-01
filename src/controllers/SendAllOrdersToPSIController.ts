@@ -23,7 +23,7 @@ class SendAllOrdersToPSIController {
               )
             : "CASH",
         total_discount: parseFloat(pedido.pedido.desconto),
-        store_slug: storeSlugConvert(pedido.pedido.loja),
+        store_slug: pedido.pedido.loja,
         situacao: pedido.pedido.situacao,
         date: format(parseISO(pedido.pedido.data), "yyyy-MM-dd HH:mm:ss"),
         reference: pedido.pedido.numero,
@@ -61,16 +61,16 @@ class SendAllOrdersToPSIController {
     //   postOrdersToPSI(order, index);
     // });
 
-    const promises = ordersToPSI.map(async (order, index) => {
-      return await postOrdersToPSI(order, index);
-    });
+    // const promises = ordersToPSI.map(async (order, index) => {
+    //   return await postOrdersToPSI(order, index);
+    // });
 
-    await Promise.all(promises);
+    // await Promise.all(promises);
 
-    // fs.writeFileSync(
-    //   `src/utils/orders.json`,
-    //   JSON.stringify(ordersToPSI, null, 2)
-    // );
+    fs.writeFileSync(
+      `src/utils/orders.json`,
+      JSON.stringify(ordersToPSI, null, 2)
+    );
   }
 }
 

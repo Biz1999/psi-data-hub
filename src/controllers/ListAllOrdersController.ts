@@ -11,7 +11,7 @@ class ListAllOrdersController {
       const weeksFormatted = format(subWeeks(yesterday, 12), "dd/MM/yyyy");
 
       const { data } = await api.get(
-        `pedidos/page=${page}/json%26apikey=${apikey}&filters=dataEmissao%5B${weeksFormatted}%20TO%20${yesterdayFormatted}%5D%26historico=true`
+        `pedidos/page=${page}/json%26apikey=${apikey}&filters=dataEmissao%5B${yesterdayFormatted}%20TO%20${yesterdayFormatted}%5D%26historico=true`
       );
       const { pedidos } = data.retorno as PedidosBling;
 

@@ -11,10 +11,12 @@ const sendAllOrdersToPSIController = new SendAllOrdersToPSIController();
 
 const bootstrap = async () => {
   // page atual = 45
-  const page = 1;
-  // await readQueue(page);
-  await readProductQueue(page);
-  // await sendAllOrdersToPSIController.handle(page);
+  // const page = 2;
+  // const products = await readProductQueue(page);
+  const pages = 1;
+  const orders = await readQueue(pages);
+
+  // Promise.all([products, orders]);
 };
 
 bootstrap();
