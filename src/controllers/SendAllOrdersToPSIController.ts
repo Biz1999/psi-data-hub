@@ -24,7 +24,6 @@ class SendAllOrdersToPSIController {
             : "CASH",
         total_discount: parseFloat(pedido.pedido.desconto),
         store_slug: pedido.pedido.loja,
-        situacao: pedido.pedido.situacao,
         date: format(parseISO(pedido.pedido.data), "yyyy-MM-dd HH:mm:ss"),
         reference: pedido.pedido.numero,
         products: pedido.pedido.itens?.map((item, index) => {

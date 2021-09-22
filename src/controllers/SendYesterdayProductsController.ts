@@ -3,16 +3,18 @@ import { Produto } from "../dtos/ProductsBling";
 import api from "../services/sendToPSI";
 import { format } from "date-fns";
 
-import { ListAllProductsController } from "./ListAllProductsController";
+import { ListYesterdayProductsController } from "./ListYesterdayProductsController";
 import { PostStockUpdateToPSI } from "../services/PostStockUpdateToPSI";
 import { storeSlugConvert } from "../utils/storeSlugConvert";
+import { exit } from "process";
 
-class SendAllProductsToPSIController {
+class SendYesterdayProductsController {
   async handle(page: number) {
     const fs = require("fs");
-    const listAllProductsController = new ListAllProductsController();
+    const listYesterdayProductsController =
+      new ListYesterdayProductsController();
     try {
-      const response = await listAllProductsController.handle("S", page);
+      const response = await listYesterdayProductsController.handle("S", page);
 
       const products = response.map((product: Produto) => {
         return {
@@ -57,11 +59,6 @@ class SendAllProductsToPSIController {
         return deposito != null;
       });
 
-      fs.writeFileSync(
-        `src/utils/depositos.json`,
-        JSON.stringify(depositosFiltered, null, 2)
-      );
-
       const productsToPSI = products.map((product) => {
         delete product["depositos"];
         return Object.fromEntries(
@@ -78,25 +75,25 @@ class SendAllProductsToPSIController {
       //     console.log(error.response.data);
       //   });
 
-      // depositosFiltered.forEach(async (deposito, index) => {
-      //   PostStockUpdateToPSI(deposito, index);
-      // });
+      depositosFiltered.forEach(async (deposito, index) => {
+        PostStockUpdateToPSI(deposito, index);
+      });
 
       fs.writeFileSync(
         `src/utils/depositos.json`,
         JSON.stringify(depositosFiltered, null, 2)
       );
 
-      fs.writeFileSync(
-        `src/utils/products.json`,
-        JSON.stringify(productsToPSI, null, 2)
-      );
+      // fs.writeFileSync(
+      //   `src/utils/products.json`,
+      //   JSON.stringify(productsToPSI, null, 2)
+      // );
 
       page++;
     } catch (error) {
-      throw new Error(error);
+      console.log(error.response.data);
     }
   }
 }
 
-export { SendAllProductsToPSIController };
+export { SendYesterdayProductsController };

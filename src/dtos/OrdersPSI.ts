@@ -17,7 +17,7 @@ export interface Order {
   total_discount?: number;
   returned?: number;
   store_slug?: string;
+  update_stock?: boolean;
   payment_method?: string;
-  situacao: string;
   products: Product[];
 }
