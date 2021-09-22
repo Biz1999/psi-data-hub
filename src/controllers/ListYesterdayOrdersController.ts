@@ -7,7 +7,6 @@ class ListYesterdayOrdersController {
     try {
       const apikey = process.env.API_KEY;
       const yesterdayFormatted = format(subDays(new Date(), 1), "dd/MM/yyyy");
-
       const { data } = await api.get(
         `pedidos/page=${page}/json%26apikey=${apikey}&filters=dataEmissao%5B${yesterdayFormatted}%20TO%20${yesterdayFormatted}%5D%26historico=true`
       );

@@ -82,10 +82,10 @@ class SendAllProductsToPSIController {
       //   PostStockUpdateToPSI(deposito, index);
       // });
 
-      // fs.writeFileSync(
-      //   `src/utils/depositos.json`,
-      //   JSON.stringify(depositosFiltered, null, 2)
-      // );
+      fs.writeFileSync(
+        `src/utils/depositos.json`,
+        JSON.stringify(depositosFiltered, null, 2)
+      );
 
       fs.writeFileSync(
         `src/utils/products.json`,

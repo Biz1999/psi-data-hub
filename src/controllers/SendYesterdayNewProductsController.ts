@@ -3,18 +3,20 @@ import { Produto } from "../dtos/ProductsBling";
 import api from "../services/sendToPSI";
 import { format } from "date-fns";
 
-import { ListYesterdayProductsController } from "./ListYesterdayProductsController";
 import { PostStockUpdateToPSI } from "../services/PostStockUpdateToPSI";
 import { storeSlugConvert } from "../utils/storeSlugConvert";
-import { exit } from "process";
+import { ListYesterdayNewProductsController } from "./ListYesterdayNewProductsController";
 
-class SendYesterdayProductsController {
+class SendYesterdayNewProductsController {
   async handle(page: number) {
     const fs = require("fs");
-    const listYesterdayProductsController =
-      new ListYesterdayProductsController();
+    const listYesterdayNewProductsController =
+      new ListYesterdayNewProductsController();
     try {
-      const response = await listYesterdayProductsController.handle("S", page);
+      const response = await listYesterdayNewProductsController.handle(
+        "S",
+        page
+      );
 
       const products = response.map((product: Produto) => {
         return {
@@ -75,19 +77,19 @@ class SendYesterdayProductsController {
       //     console.log(error.response.data);
       //   });
 
-      depositosFiltered.forEach(async (deposito, index) => {
-        PostStockUpdateToPSI(deposito, index);
-      });
+      // depositosFiltered.forEach(async (deposito, index) => {
+      //   PostStockUpdateToPSI(deposito, index);
+      // });
 
       fs.writeFileSync(
         `src/utils/depositos.json`,
         JSON.stringify(depositosFiltered, null, 2)
       );
 
-      // fs.writeFileSync(
-      //   `src/utils/products.json`,
-      //   JSON.stringify(productsToPSI, null, 2)
-      // );
+      fs.writeFileSync(
+        `src/utils/products.json`,
+        JSON.stringify(productsToPSI, null, 2)
+      );
 
       page++;
     } catch (error) {
@@ -96,4 +98,4 @@ class SendYesterdayProductsController {
   }
 }
 
-export { SendYesterdayProductsController };
+export { SendYesterdayNewProductsController };

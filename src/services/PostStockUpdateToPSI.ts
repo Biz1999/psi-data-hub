@@ -11,10 +11,16 @@ async function PostStockUpdateToPSI(deposito: Deposito, index: number) {
 
       if (deposito.quantity === in_stock) {
         await new Promise((r) => setTimeout(r, 1500 * (index + 1)));
-        console.log(index, data, deposito);
+        console.log(index, "igual", data, deposito);
         return;
       }
-      if (deposito.quantity < in_stock) deposito.type = "out";
+      if (deposito.quantity < in_stock) {
+        await new Promise((r) => setTimeout(r, 1500 * (index + 1)));
+        console.log(index, "menor", data, deposito);
+        return;
+      }
+
+      deposito.quantity = Number(deposito.quantity) - in_stock;
       Promise.resolve(
         setTimeout(async function () {
           await api
