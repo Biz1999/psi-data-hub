@@ -1,14 +1,35 @@
 import { SendYesterdayNewProductsController } from "../controllers/SendYesterdayNewProductsController";
+import { PostNewStocksToPSI } from "../services/PostNewStocksToPSI";
 
 const sendYesterdayNewProductsController =
   new SendYesterdayNewProductsController();
 
 async function readYesterdayNewProducts(page: number) {
-  await sendYesterdayNewProductsController.handle(page);
+  const fs = require("fs");
+  let depositos = [];
+  do {
+    try {
+      depositos.push(
+        ...(await sendYesterdayNewProductsController.handle(page))
+      );
+      await new Promise((f) => setTimeout(f, 2000));
+      page++;
+    } catch {
+      break;
+    }
+  } while (true);
 
-  Promise.resolve(
-    setTimeout(() => readYesterdayNewProducts(page + 1), 5000)
-  ).catch((error) => Promise.reject(error));
+  fs.writeFileSync(
+    `src/utils/products.json`,
+    JSON.stringify(depositos, null, 2)
+  );
+
+  const promises = depositos.map(async (deposito, index) => {
+    return PostNewStocksToPSI(deposito, index);
+  });
+
+  console.log(promises.length);
+  return Promise.all(promises);
 }
 
 export { readYesterdayNewProducts };

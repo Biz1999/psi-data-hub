@@ -22,7 +22,8 @@ const bootstrap = async () => {
   // const products = await readProductQueue(page);
   // await readYesterdayStocks(page);
   // const orders = await readQueue(page);
-  await readYesterdayOrders(page);
+  // await readYesterdayOrders(page);
+  await readYesterdayNewProducts(page);
   // Promise.all([products, orders]);
 };
 

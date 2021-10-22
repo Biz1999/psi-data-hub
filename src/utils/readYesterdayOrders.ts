@@ -3,11 +3,14 @@ import { SendYesterdayOrdersController } from "../controllers/SendYesterdayOrder
 const sendYesterdayOrdersController = new SendYesterdayOrdersController();
 
 async function readYesterdayOrders(page: number) {
-  await sendYesterdayOrdersController.handle(page);
-
-  Promise.resolve(
-    setTimeout(() => readYesterdayOrders(page + 1), 150500)
-  ).catch((error) => Promise.reject(error));
+  do {
+    try {
+      Promise.all(await sendYesterdayOrdersController.handle(page));
+      await new Promise((f) => setTimeout(f, 2000));
+      page++;
+    } catch {
+      break;
+    }
+  } while (true);
 }
-
 export { readYesterdayOrders };

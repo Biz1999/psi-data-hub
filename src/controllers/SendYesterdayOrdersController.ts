@@ -58,26 +58,20 @@ class SendYesterdayOrdersController {
         };
       }) as Order[];
 
-      console.log("Página:", page);
-
       const ordersToPSI = orders.map((order) => {
         return Object.fromEntries(
           Object.entries(order).filter(([_, v]) => v != null)
         );
       });
 
-      const promises = ordersToPSI.map(async (order, index) => {
-        return await postOrdersToPSI(order, index);
+      const promises = ordersToPSI.map((order, index) => {
+        return postOrdersToPSI(order, index);
       });
 
-      await Promise.all(promises);
-
-      fs.writeFileSync(
-        `src/utils/orders.json`,
-        JSON.stringify(ordersToPSI, null, 2)
-      );
+      return promises;
     } catch (error) {
-      exit();
+      // exit(1);
+      throw new Error();
     }
   }
 }

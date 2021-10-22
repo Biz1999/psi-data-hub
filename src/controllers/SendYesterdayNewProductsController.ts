@@ -18,7 +18,7 @@ class SendYesterdayNewProductsController {
         page
       );
 
-      const products = response.map((product: Produto) => {
+      const products = response.map((product: Produto, index: number) => {
         return {
           name: product.produto.descricao,
           description: product.produto.descricao,
@@ -35,6 +35,7 @@ class SendYesterdayNewProductsController {
               deposito.deposito.id !== "11725458208"
             ) {
               const newDeposito = {
+                id: index,
                 quantity: Number(deposito.deposito.saldo),
                 type: "in",
                 product_sku: product.produto.codigo,
@@ -70,14 +71,16 @@ class SendYesterdayNewProductsController {
 
       console.log("Página", page);
 
-      // await api
-      //   .post("/products", { products: productsToPSI })
-      //   .then((response) => console.log(response.status))
-      //   .catch((error) => {
-      //     console.log(error.response.data);
-      //   });
+      await api
+        .post("/products", { products: productsToPSI })
+        .then((response) => console.log(response.status))
+        .catch((error) => {
+          console.log(error.response.data);
+        });
 
-      // depositosFiltered.forEach(async (deposito, index) => {
+      await new Promise((f) => setTimeout(f, 2000));
+
+      // const promises = depositosFiltered.map(async (deposito, index) => {
       //   PostStockUpdateToPSI(deposito, index);
       // });
 
@@ -91,9 +94,9 @@ class SendYesterdayNewProductsController {
         JSON.stringify(productsToPSI, null, 2)
       );
 
-      page++;
+      return depositosFiltered;
     } catch (error) {
-      console.log(error.response.data);
+      throw new Error();
     }
   }
 }
