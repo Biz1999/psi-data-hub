@@ -32,10 +32,10 @@ class SendYesterdayNewProductsController {
             if (
               deposito.deposito.id !== "7546975469" &&
               deposito.deposito.id !== "7693996839" &&
-              deposito.deposito.id !== "11725458208"
+              deposito.deposito.id !== "14886475479" &&
+              deposito.deposito.id !== "14886480656"
             ) {
               const newDeposito = {
-                id: index,
                 quantity: Number(deposito.deposito.saldo),
                 type: "in",
                 product_sku: product.produto.codigo,
@@ -69,7 +69,7 @@ class SendYesterdayNewProductsController {
         );
       });
 
-      console.log("Página", page);
+      console.log("Produtos: Página", page);
 
       await api
         .post("/products", { products: productsToPSI })
@@ -78,16 +78,16 @@ class SendYesterdayNewProductsController {
           console.log(error.response.data);
         });
 
-      await new Promise((f) => setTimeout(f, 2000));
+      // await new Promise((f) => setTimeout(f, 2000));
 
       // const promises = depositosFiltered.map(async (deposito, index) => {
       //   PostStockUpdateToPSI(deposito, index);
       // });
 
-      fs.writeFileSync(
-        `src/utils/depositos.json`,
-        JSON.stringify(depositosFiltered, null, 2)
-      );
+      // fs.writeFileSync(
+      //   `src/utils/depositos.json`,
+      //   JSON.stringify(depositosFiltered, null, 2)
+      // );
 
       fs.writeFileSync(
         `src/utils/products.json`,

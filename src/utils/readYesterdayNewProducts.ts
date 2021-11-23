@@ -20,7 +20,7 @@ async function readYesterdayNewProducts(page: number) {
   } while (true);
 
   fs.writeFileSync(
-    `src/utils/products.json`,
+    `src/utils/depositos.json`,
     JSON.stringify(depositos, null, 2)
   );
 
@@ -30,6 +30,7 @@ async function readYesterdayNewProducts(page: number) {
 
   console.log(promises.length);
   return Promise.all(promises);
+  return console.log("ok");
 }
 
 export { readYesterdayNewProducts };
