@@ -12,6 +12,7 @@ export interface Pedido {
   pedido: {
     numero: string;
     totalvenda: string;
+    totalprodutos: string;
     desconto: string;
     data: string;
     loja: string;

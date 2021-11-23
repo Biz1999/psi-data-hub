@@ -18,7 +18,7 @@ class SendYesterdayNewProductsController {
         page
       );
 
-      const products = response.map((product: Produto) => {
+      const products = response.map((product: Produto, index: number) => {
         return {
           name: product.produto.descricao,
           description: product.produto.descricao,
@@ -32,7 +32,8 @@ class SendYesterdayNewProductsController {
             if (
               deposito.deposito.id !== "7546975469" &&
               deposito.deposito.id !== "7693996839" &&
-              deposito.deposito.id !== "11725458208"
+              deposito.deposito.id !== "14886475479" &&
+              deposito.deposito.id !== "14886480656"
             ) {
               const newDeposito = {
                 quantity: Number(deposito.deposito.saldo),
@@ -68,32 +69,34 @@ class SendYesterdayNewProductsController {
         );
       });
 
-      console.log("Página", page);
+      console.log("Produtos: Página", page);
 
-      // await api
-      //   .post("/products", { products: productsToPSI })
-      //   .then((response) => console.log(response.status))
-      //   .catch((error) => {
-      //     console.log(error.response.data);
-      //   });
+      await api
+        .post("/products", { products: productsToPSI })
+        .then((response) => console.log(response.status))
+        .catch((error) => {
+          console.log(error.response.data);
+        });
 
-      // depositosFiltered.forEach(async (deposito, index) => {
+      // await new Promise((f) => setTimeout(f, 2000));
+
+      // const promises = depositosFiltered.map(async (deposito, index) => {
       //   PostStockUpdateToPSI(deposito, index);
       // });
 
-      fs.writeFileSync(
-        `src/utils/depositos.json`,
-        JSON.stringify(depositosFiltered, null, 2)
-      );
+      // fs.writeFileSync(
+      //   `src/utils/depositos.json`,
+      //   JSON.stringify(depositosFiltered, null, 2)
+      // );
 
       fs.writeFileSync(
         `src/utils/products.json`,
         JSON.stringify(productsToPSI, null, 2)
       );
 
-      page++;
+      return depositosFiltered;
     } catch (error) {
-      console.log(error.response.data);
+      throw new Error();
     }
   }
 }

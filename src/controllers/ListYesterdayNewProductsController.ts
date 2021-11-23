@@ -8,7 +8,7 @@ class ListYesterdayNewProductsController {
       const apikey = process.env.API_KEY;
       const yesterdayFormatted = format(subDays(new Date(), 1), "dd/MM/yyyy");
       const encoded = encodeURI(
-        `/produtos/page=${page}/json&apikey=${apikey}&estoque=${estoque}&filters=dataInclusao[${"15/09/2021"} TO ${yesterdayFormatted}]`
+        `/produtos/page=${page}/json&apikey=${apikey}&estoque=${estoque}&filters=dataInclusao[${yesterdayFormatted} TO ${yesterdayFormatted}]`
       );
       const { data } = await api.get(encoded).catch((err) => {
         throw new Error(err);

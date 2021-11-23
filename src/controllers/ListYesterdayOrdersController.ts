@@ -1,15 +1,16 @@
 import { PedidosBling } from "../dtos/OrdersBling";
 import api from "../services/dataFromBling";
-import { format, subDays } from "date-fns";
+import { format, subDays, subWeeks } from "date-fns";
 
 class ListYesterdayOrdersController {
   async handle(page: number) {
     try {
       const apikey = process.env.API_KEY;
+      const yesterday = subDays(new Date(), 1);
       const yesterdayFormatted = format(subDays(new Date(), 1), "dd/MM/yyyy");
-      const { data } = await api.get(
-        `pedidos/page=${page}/json%26apikey=${apikey}&filters=dataEmissao%5B${yesterdayFormatted}%20TO%20${yesterdayFormatted}%5D%26historico=true`
-      );
+      const weeksFormatted = format(subWeeks(yesterday, 12), "dd/MM/yyyy");
+      const url = `pedidos/page=${page}/json%26apikey=${apikey}&filters=dataEmissao%5B${yesterdayFormatted}%20TO%20${yesterdayFormatted}%5D%26historico=true`;
+      const { data } = await api.get(url);
       const { pedidos } = data.retorno as PedidosBling;
 
       return pedidos;
